@@ -1,5 +1,6 @@
 // Coloque aqui suas actions
-import { USER, CURRENCIES, REQUEST_API, SUCCES_API, ERROR_API } from './actionTypes';
+import {
+  USER, CURRENCIES, REQUEST_API, SUCCES_API, ERROR_API, EXPENSES } from './actionTypes';
 
 export const userAction = (payload) => ({
   type: USER,
@@ -37,3 +38,8 @@ export function fetchAPI() {
     }
   };
 }
+
+export const changeExpenses = (payload) => ({
+  type: EXPENSES,
+  payload,
+});

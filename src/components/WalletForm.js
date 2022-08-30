@@ -1,13 +1,14 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { fetchAPI } from '../redux/actions';
+import { fetchAPI, changeExpenses } from '../redux/actions';
 
 class WalletForm extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
+      id: 0,
       value: '',
       description: '',
       currency: 'USD',
@@ -25,6 +26,25 @@ class WalletForm extends Component {
     this.setState({
       [name]: value,
     });
+  };
+
+  handleSubmit = async (e) => {
+    e.preventDefault();
+    const { id, value, description, currency, method, tag } = this.state;
+    const { addExpense, totalUpdate } = this.props;
+    const responseURL = await fetch('https://economia.awesomeapi.com.br/json/all');
+    const exchangeRates = await responseURL.json();
+    this.setState((prev) => ({
+      id: prev.id + 1,
+      value: '',
+      currency: 'USD',
+      method: 'Dinheiro',
+      tag: 'Alimentação',
+      description: '',
+    }));
+    const newExpense = { id, value, description, currency, method, tag, exchangeRates };
+    addExpense(newExpense);
+    totalUpdate();
   };
 
   render() {
@@ -68,6 +88,7 @@ class WalletForm extends Component {
                   {currencie}
                 </option>
               ))}
+
             </select>
           </label>
 
@@ -100,7 +121,7 @@ class WalletForm extends Component {
               <option value="Saúde">Saúde</option>
             </select>
           </label>
-          <button type="submit">
+          <button type="submit" onClick={ this.handleSubmit }>
             Adicionar despesas
           </button>
         </form>
@@ -116,10 +137,13 @@ WalletForm.propTypes = {
     PropTypes.string,
   ).isRequired,
   getCurrencies: PropTypes.func.isRequired,
+  addExpense: PropTypes.func.isRequired,
+  totalUpdate: PropTypes.func.isRequired,
 };
 
 const mapDispatchToProps = (dispatch) => ({
   getCurrencies: () => dispatch(fetchAPI()),
+  addExpense: (state) => dispatch(changeExpenses(state)),
 });
 
 export default connect(null, mapDispatchToProps)(WalletForm);
