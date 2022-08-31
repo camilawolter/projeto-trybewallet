@@ -10,12 +10,22 @@ class Wallet extends React.Component {
 
     this.state = {
       total: 0,
-      currencies: [],
+      currencies: ['USD',
+        'CAD',
+        'GBP',
+        'ARS',
+        'BTC',
+        'LTC',
+        'EUR',
+        'JPY',
+        'CHF',
+        'AUD',
+        'CNY',
+        'ILS',
+        'ETH',
+        'XRP',
+        'DOGE'],
     };
-  }
-
-  componentDidMount() {
-    this.fetchCurrencies();
   }
 
   totalUpdate = () => {
@@ -31,16 +41,6 @@ class Wallet extends React.Component {
       total,
     });
   };
-
-  async fetchCurrencies() {
-    const response = await fetch('https://economia.awesomeapi.com.br/json/all');
-    const data = await response.json();
-    const coins = Object.keys(data).filter((coin) => (
-      coin !== 'USDT'));
-    this.setState({
-      currencies: coins,
-    });
-  }
 
   render() {
     const { emailUser } = this.props;

@@ -1,4 +1,5 @@
 // Coloque aqui suas actions
+import getCurrenciesAPI from './fetchCurrenciesAPI';
 import {
   USER, CURRENCIES, REQUEST_API, SUCCES_API, ERROR_API, EXPENSES } from './actionTypes';
 
@@ -30,8 +31,7 @@ export function fetchAPI() {
   return async (dispatch) => {
     try {
       dispatch(requestAPI());
-      const responseURL = await fetch('https://economia.awesomeapi.com.br/json/all');
-      const data = await responseURL.json();
+      const data = await getCurrenciesAPI();
       dispatch(succesAPI(data));
     } catch (error) {
       dispatch(errorAPI(error));
