@@ -3,6 +3,7 @@ import userEvent from '@testing-library/user-event';
 import { screen, waitFor } from '@testing-library/react';
 import renderWithRouterAndRedux from './helpers/renderWith';
 import mockData from './helpers/mockData';
+import mockFetch from './helpers/mockFetch';
 import App from '../App';
 
 describe('Teste para o componente WalletForm', () => {
