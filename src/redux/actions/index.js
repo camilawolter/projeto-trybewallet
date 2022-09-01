@@ -1,7 +1,8 @@
 // Coloque aqui suas actions
 import getCurrenciesAPI from './fetchCurrenciesAPI';
 import {
-  USER, CURRENCIES, REQUEST_API, SUCCES_API, ERROR_API, EXPENSES } from './actionTypes';
+  USER, CURRENCIES, REQUEST_API, SUCCES_API, ERROR_API, EXPENSES, REMOVE_EXPENSE,
+} from './actionTypes';
 
 export const userAction = (payload) => ({
   type: USER,
@@ -41,5 +42,10 @@ export function fetchAPI() {
 
 export const changeExpenses = (payload) => ({
   type: EXPENSES,
+  payload,
+});
+
+export const deleteExpense = (payload) => ({
+  type: REMOVE_EXPENSE,
   payload,
 });

@@ -10,7 +10,6 @@ class Wallet extends React.Component {
     super(props);
 
     this.state = {
-      total: 0,
       currencies: ['USD',
         'CAD',
         'GBP',
@@ -29,27 +28,13 @@ class Wallet extends React.Component {
     };
   }
 
-  totalUpdate = () => {
-    const { expenses } = this.props;
-    const total = expenses.reduce((acc, { value, exchangeRates, currency }) => {
-      const expenseValue = Number(value);
-      const exchangeRate = Number(exchangeRates[currency].ask);
-
-      return acc + (expenseValue * exchangeRate);
-    }, 0);
-
-    this.setState({
-      total,
-    });
-  };
-
   render() {
     const { emailUser } = this.props;
-    const { currencies, total } = this.state;
+    const { currencies } = this.state;
     return (
       <div>
-        <Header emailUser={ emailUser } total={ total } />
-        <WalletForm currencies={ currencies } totalUpdate={ this.totalUpdate } />
+        <Header emailUser={ emailUser } />
+        <WalletForm currencies={ currencies } />
         <Table />
       </div>
     );
@@ -58,15 +43,11 @@ class Wallet extends React.Component {
 
 Wallet.propTypes = {
   emailUser: PropTypes.string.isRequired,
-  expenses: PropTypes.arrayOf(PropTypes.shape()),
 };
-
-Wallet.defaultProps = { expenses: 0 };
 
 const mapStateToProps = (state) => ({
   emailUser: state.user.email,
   currencies: state.wallet.currencies,
-  expenses: state.wallet.expenses,
 });
 
 export default connect(mapStateToProps, null)(Wallet);

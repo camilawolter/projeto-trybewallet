@@ -31,7 +31,7 @@ class WalletForm extends Component {
   handleSubmit = async (e) => {
     e.preventDefault();
     const { id, value, description, currency, method, tag } = this.state;
-    const { addExpense, totalUpdate } = this.props;
+    const { addExpense } = this.props;
     const responseURL = await fetch('https://economia.awesomeapi.com.br/json/all');
     const exchangeRates = await responseURL.json();
     this.setState((prev) => ({
@@ -44,7 +44,6 @@ class WalletForm extends Component {
     }));
     const newExpense = { id, value, description, currency, method, tag, exchangeRates };
     addExpense(newExpense);
-    totalUpdate();
   };
 
   render() {
@@ -138,7 +137,6 @@ WalletForm.propTypes = {
   ).isRequired,
   getCurrencies: PropTypes.func.isRequired,
   addExpense: PropTypes.func.isRequired,
-  totalUpdate: PropTypes.func.isRequired,
 };
 
 const mapDispatchToProps = (dispatch) => ({

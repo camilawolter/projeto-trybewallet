@@ -9,3 +9,5 @@ export const SUCCES_API = 'SUCCES_API';
 export const ERROR_API = 'ERROR_API';
 
 export const EXPENSES = 'EXPENSES';
+
+export const REMOVE_EXPENSE = 'REMOVE_EXPENSE';
