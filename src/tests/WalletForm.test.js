@@ -90,13 +90,13 @@ describe('Teste para o componente WalletForm', () => {
     userEvent.type(valorInput, '10');
     userEvent.type(descricaoInput, 'Teste');
     userEvent.selectOptions(moedaInput, 'CAD');
-    userEvent.selectOptions(metodoInput, 'Cartão de crédito');
+    userEvent.selectOptions(metodoInput, 'Dinheiro');
     userEvent.selectOptions(tagInput, 'Lazer');
 
     expect(valorInput).toHaveValue(10);
     expect(descricaoInput).toHaveValue('Teste');
     expect(moedaInput).toHaveValue('CAD');
-    expect(metodoInput).toHaveValue('Cartão de crédito');
+    expect(metodoInput).toHaveValue('Dinheiro');
     expect(tagInput).toHaveValue('Lazer');
   });
   test('testa se a despesa é adicionada no estado global', async () => {
@@ -113,5 +113,91 @@ describe('Teste para o componente WalletForm', () => {
     userEvent.type(passwordInput, password);
     userEvent.click(buttonEntrar);
     await waitFor(() => expect(global.fetch).toHaveBeenCalled());
+
+    const {
+      valorInput,
+      descricaoInput,
+      moedaInput,
+      metodoInput,
+      tagInput,
+      buttonDespesas } = getButtonAndInputs();
+
+    userEvent.type(valorInput, '10');
+    userEvent.type(descricaoInput, 'Teste');
+    userEvent.selectOptions(moedaInput, 'CAD');
+    userEvent.selectOptions(metodoInput, 'Cartão de débito');
+    userEvent.selectOptions(tagInput, 'Lazer');
+    userEvent.click(buttonDespesas);
+
+    await waitFor(() => {
+      expect(valorInput).toHaveValue(null);
+      expect(descricaoInput).toHaveValue('');
+      expect(moedaInput).toHaveValue('USD');
+      expect(metodoInput).toHaveValue('Dinheiro');
+      expect(tagInput).toHaveValue('Alimentação');
+    });
+  });
+  test('Testa o botão de deletar', async () => {
+    const newStore = {
+      user: {
+        email,
+      },
+      wallet: {
+        currencies: Object.values(mockData).map(({ code }) => code),
+        expenses: [
+          {
+            id: 0,
+            value: '10',
+            currency: 'CAD',
+            method: 'Cartão de crédito',
+            tag: 'Lazer',
+            description: 'teste',
+            exchangeRates: mockData,
+          },
+        ],
+        editor: false,
+        idToEdit: 0,
+      },
+    };
+
+    const { store } = renderWithRouterAndRedux(<App />, { initialEntries: ['/carteira'], initialState: newStore });
+
+    const buttonDelete = screen.getByTestId('delete-btn');
+    expect(buttonDelete).toBeInTheDocument();
+    userEvent.click(buttonDelete);
+
+    await waitFor(() => {
+      const { wallet } = store.getState();
+      expect(wallet.expenses).toHaveLength(0);
+      expect(screen.getByText(/0/i)).toBeInTheDocument();
+    });
+  });
+  test('Testa se possui um botão de editar', async () => {
+    const newStore = {
+      user: {
+        email,
+      },
+      wallet: {
+        currencies: Object.values(mockData).map(({ code }) => code),
+        expenses: [
+          {
+            id: 0,
+            value: '10',
+            currency: 'CAD',
+            method: 'Cartão de crédito',
+            tag: 'Lazer',
+            description: 'teste',
+            exchangeRates: mockData,
+          },
+        ],
+        editor: false,
+        idToEdit: 0,
+      },
+    };
+
+    renderWithRouterAndRedux(<App />, { initialEntries: ['/carteira'], initialState: newStore });
+
+    const buttonEdit = screen.getByTestId('edit-btn');
+    expect(buttonEdit).toBeInTheDocument();
   });
 });
